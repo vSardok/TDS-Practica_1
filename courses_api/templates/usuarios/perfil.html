@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi perfil</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border:#1f2937;
+      --accent:#3b82f6;
+      --accent-600:#2563eb;
+      --success:#10b981;
+      --danger:#ef4444;
+      --chip:#0b1220;
+      --google:#ffffff;
+      --google-text:#111827;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background:radial-gradient(1200px 800px at 80% -10%, #1f2937 0, transparent 50%), var(--bg);
+      display:grid; place-items:center; padding:24px;
+    }
+    .container{width:100%; max-width:900px; display:grid; gap:18px}
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    header a{color:var(--muted); text-decoration:none}
+    header a:hover{color:#cbd5e1}
+    .card{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+      animation:pop .25s ease-out;
+    }
+    @keyframes pop{from{transform:scale(.985);opacity:.8}to{transform:scale(1);opacity:1}}
+
+    .profile{
+      display:grid; grid-template-columns:80px 1fr auto; gap:16px; align-items:center;
+    }
+    .avatar{
+      width:80px; height:80px; border-radius:50%;
+      background:linear-gradient(145deg,#1f2937,#0b1220);
+      display:grid; place-items:center; font-weight:800; font-size:1.25rem; letter-spacing:.5px;
+      border:1px solid var(--border);
+    }
+    h1{margin:0; font-size:1.6rem}
+    .sub{margin:4px 0 0; color:var(--muted)}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      background:var(--accent); color:#fff; border:none; border-radius:12px;
+      padding:10px 14px; text-decoration:none; font-weight:600; cursor:pointer;
+      transition:transform .04s ease, background .15s ease;
+    }
+    .btn:hover{background:var(--accent-600)}
+    .btn:active{transform:translateY(1px)}
+    .btn-ghost{color:var(--muted); background:transparent; border:1px solid var(--border)}
+    .btn-ghost:hover{color:#cbd5e1; border-color:#334155}
+    .btn-danger{background:var(--danger)}
+
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+    .chip{
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--chip); border:1px solid var(--border);
+      color:#cbd5e1; border-radius:999px; padding:6px 10px; font-size:.85rem;
+    }
+    .grid{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px;
+    }
+    .stat{
+      background:#0b1220; border:1px solid var(--border); border-radius:12px; padding:14px;
+    }
+    .stat b{display:block; font-size:1.2rem}
+    .stat small{color:var(--muted)}
+
+    .section-title{margin:0 0 10px; font-size:1.1rem}
+    .messages{margin:10px 0 0; padding:0; list-style:none}
+    .messages li{
+      background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.35);
+      color:#bbf7d0; padding:10px 12px; border-radius:10px; margin-top:8px; font-size:.95rem
+    }
+
+    .btn-google{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; margin-top:12px; background:var(--google); color:var(--google-text);
+      padding:11px 14px; border-radius:12px; text-decoration:none; font-weight:600; border:1px solid #e5e7eb;
+    }
+    .btn-google:hover{background:#f9fafb}
+    .google-icon{width:18px; height:18px}
+
+    @media (max-width:720px){
+      .profile{grid-template-columns:64px 1fr}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  {% load socialaccount %}
+
+  <div class="container">
+
+    <header>
+      <a href="{% url 'home' %}">← Inicio</a>
+      <div style="display:flex; gap:8px;">
+        <a class="btn btn-ghost" href="{% url 'logout' %}">Cerrar sesión</a>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="profile">
+        <div class="avatar" aria-hidden="true">
+          {% with uname=request.user.username|default:request.user.get_username|default:"U" %}
+            {{ uname|slice:":1"|upper }}
+          {% endwith %}
+        </div>
+
+        <div>
+          <h1>Bienvenido, {{ request.user.username|default:request.user.get_username }}</h1>
+          <p class="sub">{{ request.user.email|default:"(sin correo registrado)" }}</p>
+
+          <div class="chips">
+            {% if request.user.is_authenticated %}
+              <span class="chip">Autenticado</span>
+            {% endif %}
+            {% if request.user.is_staff %}
+              <span class="chip">Staff</span>
+            {% else %}
+              <span class="chip">Usuario estándar</span>
+            {% endif %}
+            {% if request.user.is_superuser %}
+              <span class="chip">Superusuario</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div>
+          <a class="btn" href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+      </div>
+
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h3 class="section-title">Resumen</h3>
+      <div class="grid">
+        <div class="stat">
+          <b>{{ request.user.date_joined|date:"Y-m-d" }}</b>
+          <small>Fecha de registro</small>
+        </div>
+        <div class="stat">
+          <b>{{ request.user.last_login|date:"Y-m-d H:i" |default:"—" }}</b>
+          <small>Último acceso</small>
+        </div>
+        <div class="stat">
+          <b>{{ request.user.is_active|yesno:"Sí,No" }}</b>
+          <small>Cuenta activa</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 class="section-title">Cuenta de Google</h3>
+      {% if request.user.is_authenticated and request.user.socialaccount_set.all %}
+        <p class="sub">Cuenta conectada:
+          {% for sa in request.user.socialaccount_set.all %}
+            <span class="chip">Google: {{ sa.extra_data.email|default:request.user.email }}</span>
+          {% endfor %}
+        </p>
+      {% else %}
+        <p class="sub">Conecta tu cuenta para iniciar sesión fácilmente.</p>
+        <a class="btn-google" href="{% provider_login_url 'google' %}">
+          <svg class="google-icon" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M533.5 278.4c0-17.4-1.5-34.1-4.3-50.4H272v95.3h146.9c-6.3 34.3-25.5 63.3-54.5 82.7v68h88c51.4-47.3 80.1-117 80.1-195.6z" fill="#4285F4"/>
+            <path d="M272 544.3c72.9 0 134.2-24.1 178.9-65.3l-88-68c-24.5 16.4-55.8 26-90.9 26-69.8 0-128.9-47.1-150.1-110.3h-92.7v69.6c44.1 87.6 134.8 147.9 243.8 147.9z" fill="#34A853"/>
+            <path d="M121.9 326.7c-10.9-32.7-10.9-68 0-100.7V156.4h-92.7C4.1 195.5 0 236.8 0 278.4s4.1 82.9 29.2 122h92.7l0-73.7z" fill="#FBBC05"/>
+            <path d="M272 109.7c39.7-.6 78 14 107 41.6l80.1-80.1C406.2 24.6 345 0 272 0 163 0 72.3 60.3 28.2 147.9l93.7 69.6C143.1 154.3 202.2 109.7 272 109.7z" fill="#EA4335"/>
+          </svg>
+          Conectar con Google
+        </a>
+      {% endif %}
+    </section>
+
+  </div>
+</body>
+</html>

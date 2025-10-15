@@ -1,0 +1,49 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# Environment
+.env
+venv/
+ENV/
+env/
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Migrations
+*/migrations/*.pyc
+*/migrations/__pycache__/
+*/migrations/*.pyo
+*/migrations/*.db
+*/migrations/*.sqlite3
+*/migrations/*.0001_initial.py
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Test & build
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST

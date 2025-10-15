@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mis cursos</title>
+  <style>
+    :root{
+      --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af;
+      --border:#1f2937; --accent:#3b82f6; --accent-600:#2563eb;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:radial-gradient(1200px 800px at 80% -10%, #1f2937 0, transparent 50%), var(--bg);
+      color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      padding:24px;
+    }
+    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+    header a{color:var(--muted); text-decoration:none}
+    header a:hover{color:#cbd5e1}
+    h1{margin:0; font-size:1.6rem}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    .card{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    .title{font-weight:700; margin:0 0 6px}
+    .muted{color:var(--muted); margin:0 0 12px}
+    .bar{height:8px; background:#0b1220; border:1px solid var(--border); border-radius:999px; overflow:hidden}
+    .fill{height:100%; background:var(--accent)}
+    .row{display:flex; justify-content:space-between; align-items:center; margin-top:10px}
+    .btn{display:inline-block; padding:8px 12px; border-radius:10px; background:var(--accent); color:#fff; text-decoration:none; font-weight:600}
+    .btn:hover{background:var(--accent-600)}
+    @media (max-width:960px){ .grid{grid-template-columns:1fr 1fr} }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+    .empty{
+      background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mis cursos</h1>
+    <nav>
+      <a href="{% url 'perfil' %}">Mi perfil</a>
+      <span style="opacity:.4; margin:0 .5rem">•</span>
+      <a href="{% url 'logout' %}">Cerrar sesión</a>
+    </nav>
+  </header>
+
+  {% if enrollments and enrollments.exists %}
+    <section class="grid">
+      {% for enr in enrollments %}
+        <article class="card">
+          <h3 class="title">{{ enr.course.title }}</h3>
+          <p class="muted">
+            Instructor: {{ enr.course.instructor.full_name|default:"—" }} ·
+            Estado: {{ enr.status }} ·
+            Inscrito: {{ enr.enrolled_at|date:"Y-m-d" }}
+          </p>
+          <div class="bar" aria-label="Progreso">
+            <div class="fill" style="width: {{ enr.progress_pct|floatformat:0 }}%"></div>
+          </div>
+          <div class="row">
+            <small class="muted">Progreso: {{ enr.progress_pct|floatformat:0 }}%</small>
+            <a class="btn" href="#">Continuar</a>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <section class="empty">
+      <p>No tienes cursos inscritos todavía.</p>
+      <p class="muted">Cuando te inscribas a un curso, aparecerá aquí.</p>
+    </section>
+  {% endif %}
+</body>
+</html>

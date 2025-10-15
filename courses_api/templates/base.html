@@ -1,0 +1,50 @@
+{% load static %}
+{% load socialaccount %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Cursos{% endblock %}</title>
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+  <style>
+    header nav a { margin-right: .75rem; }
+    .messages { margin: 1rem 0; }
+    .messages .success { color: #0a7c2f; }
+    .messages .error { color: #b00020; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{% url 'home' %}">Inicio</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'perfil' %}">Mi perfil</a>
+        <a href="{% url 'logout' %}">Cerrar sesión</a>
+      {% else %}
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a href="{% url 'registro' %}">Registrarse</a>
+      {% endif %}
+    </nav>
+    <h1>{% block header %}Plataforma de cursos{% endblock %}</h1>
+  </header>
+
+  <main>
+    <div class="messages">
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>© {{ now|date:"Y" }} Cursos</p>
+  </footer>
+</body>
+</html>
