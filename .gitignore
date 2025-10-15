@@ -30,7 +30,7 @@ Thumbs.db
 */migrations/*.pyo
 */migrations/*.db
 */migrations/*.sqlite3
-*/migrations/*.0001_initial.py
+*/migrations/0001_initial.py
 
 # Coverage reports
 htmlcov/
