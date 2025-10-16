@@ -1,4 +1,3 @@
-# views.py
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
@@ -17,14 +16,10 @@ from .serializers import (
 )
 
 
-# ---------------------------
-# Páginas básicas (HTML)
-# ---------------------------
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    # Mapea auth.User -> courses_api.User (por email)
     app_user = None
     if hasattr(request, "user") and request.user.is_authenticated and request.user.email:
         try:
@@ -46,17 +41,10 @@ def index(request):
 
 
 def registro(request):
-    """
-    Registro simple usando un RegistroForm (Django auth).
-    Nota: Este flujo usa el sistema de auth de Django para login HTML.
-    Tu API usa un modelo User propio para cursos; si deseas unificar,
-    crea un pipeline que sincronice auth.User <-> models.User (por email, por ejemplo).
-    """
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            # Asegúrate de que el form tenga un campo 'password'
             user.set_password(form.cleaned_data['password'])
             user.save()
             messages.success(request, 'Usuario registrado correctamente')
@@ -68,7 +56,7 @@ def registro(request):
 
 def iniciar_sesion(request):
     if request.method == 'POST':
-        username = request.POST.get('username')  # o email si tu form lo usa
+        username = request.POST.get('username')  
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
@@ -87,17 +75,7 @@ def cerrar_sesion(request):
     auth_logout(request)
     return redirect('login')
 
-
-# ---------------------------
-# Utilidad: mapear request.user (auth) a models.User (APP)
-# ---------------------------
-
 def _get_current_app_user(request):
-    """
-    Intenta mapear el usuario autenticado de Django (auth.User)
-    a nuestro modelo de dominio User (por email).
-    Devuelve instancia de models.User o None.
-    """
     if not request.user.is_authenticated:
         return None
     try:
@@ -107,13 +85,7 @@ def _get_current_app_user(request):
         return None
     return None
 
-
-# ---------------------------
-# API (DRF ViewSets)
-# ---------------------------
-
 class UserViewSet(viewsets.ModelViewSet):
-    """ViewSet para el modelo User (de la app)"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -125,7 +97,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class CourseViewSet(viewsets.ModelViewSet):
-    """ViewSet para Course"""
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -136,10 +107,6 @@ class CourseViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def perform_create(self, serializer):
-        """
-        Si podemos mapear el auth user -> app user, autocompleta instructor.
-        Si no, deja que el cliente envíe 'instructor' explícitamente.
-        """
         app_user = _get_current_app_user(self.request)
         if app_user is not None:
             serializer.save(instructor=app_user)
@@ -148,7 +115,6 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonViewSet(viewsets.ModelViewSet):
-    """ViewSet para Lesson"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -160,7 +126,6 @@ class LessonViewSet(viewsets.ModelViewSet):
 
 
 class EnrollmentViewSet(viewsets.ModelViewSet):
-    """ViewSet para Enrollment"""
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
     permission_classes = [IsAuthenticated]
@@ -171,10 +136,6 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
     ordering = ['-enrolled_at']
 
     def perform_create(self, serializer):
-        """
-        Si podemos mapear el auth user -> app user, fija automáticamente 'user'.
-        Si no, permite que venga en el payload.
-        """
         app_user = _get_current_app_user(self.request)
         if app_user is not None:
             serializer.save(user=app_user)
@@ -183,7 +144,6 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """ViewSet para Comment"""
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -194,9 +154,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def perform_create(self, serializer):
-        """
-        Si podemos mapear el auth user -> app user, fija automáticamente 'user'.
-        """
         app_user = _get_current_app_user(self.request)
         if app_user is not None:
             serializer.save(user=app_user)
