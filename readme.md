@@ -1,14 +1,15 @@
 
 # Instrucciones para levantar el servicio
 
-Tras clonar el repositorio: docker compose up
+Tras clonar el repositorio, levantar los contenedores: 
+- docker compose up
 
 Acceder al contenedor web y ejecutar:
 - python manage.py makemigrations
 - python manage.py migrate
 - python manage.py createsuperuser
 
-Inciar sesion como admin en localhost:8500:
+Inciar sesion como admin en localhost:8500/admin:
 - Sites > Add Site
   - localhost:8500 
 - Social Applications > Add Social Application
@@ -32,4 +33,7 @@ localhost:8500/swagger
 ![alt text](image-1.png)
 
 ![alt text](image-2.png)
+
+
+
 
