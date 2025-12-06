@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ course.title }} | Cursos</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --accent: #3b82f6;
+      --accent-600: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --star: #fbbf24;
+    }
+    
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 80% -10%, #1f2937 0, transparent 50%), var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+      padding: 24px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    header a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    header a:hover {
+      color: #cbd5e1;
+    }
+    
+    nav {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    
+    /* Hero Section */
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 32px;
+      align-items: start;
+    }
+    
+    .hero-content h1 {
+      margin: 0 0 12px;
+      font-size: 2rem;
+    }
+    
+    .hero-content .meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--star);
+    }
+    
+    .description {
+      line-height: 1.6;
+      color: var(--muted);
+      margin: 16px 0;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      position: sticky;
+      top: 24px;
+    }
+    
+    .price {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--success);
+    }
+    
+    .price.free {
+      color: var(--warning);
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      background: var(--accent-600);
+      transform: translateY(-1px);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn-success {
+      background: var(--success);
+      cursor: not-allowed;
+    }
+    
+    .btn-success:hover {
+      background: var(--success);
+      transform: none;
+    }
+    
+    .sidebar-stats {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      color: var(--muted);
+    }
+    
+    .stat-item strong {
+      color: var(--text);
+    }
+    
+    /* Content Sections */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    
+    .section h2 {
+      margin: 0 0 20px;
+      font-size: 1.5rem;
+    }
+    
+    /* Lessons */
+    .lesson-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    
+    .lesson-item:hover {
+      border-color: var(--accent);
+    }
+    
+    .lesson-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    
+    .lesson-info {
+      flex: 1;
+    }
+    
+    .lesson-title {
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    
+    .lesson-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .badge.free {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+    }
+    
+    /* Comments */
+    .comment {
+      padding: 16px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .comment-author {
+      font-weight: 600;
+    }
+    
+    .comment-date {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    
+    .comment-body {
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+    
+    /* Messages */
+    .messages {
+      margin-bottom: 20px;
+    }
+    
+    .alert {
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid;
+    }
+    
+    .alert-success {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #bbf7d0;
+    }
+    
+    .alert-error {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fecaca;
+    }
+    
+    .alert-info {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.35);
+      color: #bfdbfe;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        position: static;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+      
+      .hero, .section {
+        padding: 20px;
+      }
+      
+      .hero-content h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <a href="{% url 'home' %}">← Volver al inicio</a>
+      <nav>
+        {% if user.is_authenticated %}
+          <a href="{% url 'perfil' %}">Mi perfil</a>
+          <a href="{% url 'logout' %}">Cerrar sesión</a>
+        {% else %}
+          <a href="{% url 'login' %}">Iniciar sesión</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <h1>{{ course.title }}</h1>
+          
+          <div class="meta">
+            <div class="meta-item">
+              👤 {{ course.instructor.full_name }}
+            </div>
+            
+            {% if avg_rating %}
+              <div class="meta-item rating">
+                ⭐ {{ avg_rating }} ({{ rating_count }} valoraciones)
+              </div>
+            {% endif %}
+            
+            <div class="meta-item">
+              📚 {{ total_lessons }} lecciones
+            </div>
+            
+            {% if total_hours > 0 or total_minutes > 0 %}
+              <div class="meta-item">
+                ⏱️ 
+                {% if total_hours > 0 %}{{ total_hours }}h {% endif %}
+                {% if total_minutes > 0 %}{{ total_minutes }}min{% endif %}
+              </div>
+            {% endif %}
+            
+            <div class="meta-item">
+              🌐 {{ course.get_language_display|default:course.language }}
+            </div>
+          </div>
+          
+          <p class="description">{{ course.description }}</p>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+          {% if course.price_usd > 0 %}
+            <div class="price">${{ course.price_usd }}</div>
+          {% else %}
+            <div class="price free">Gratis</div>
+          {% endif %}
+          
+          {% if is_enrolled %}
+            <button class="btn btn-success" disabled>
+              ✓ Ya estás inscrito
+            </button>
+            
+            {% if user_enrollment %}
+              <div class="sidebar-stats">
+                <div class="stat-item">
+                  <span>Progreso</span>
+                  <strong>{{ user_enrollment.progress_pct|floatformat:0 }}%</strong>
+                </div>
+                <div class="stat-item">
+                  <span>Estado</span>
+                  <strong>{{ user_enrollment.get_status_display }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>Inscrito</span>
+                  <strong>{{ user_enrollment.enrolled_at|date:"d M Y" }}</strong>
+                </div>
+              </div>
+            {% endif %}
+          {% else %}
+            <form method="POST" action="{% url 'enroll_course' course.slug %}">
+              {% csrf_token %}
+              <button type="submit" class="btn">
+                Inscribirme ahora
+              </button>
+            </form>
+          {% endif %}
+          
+          <div class="sidebar-stats">
+            <div class="stat-item">
+              <span>Nivel</span>
+              <strong>Todos los niveles</strong>
+            </div>
+            <div class="stat-item">
+              <span>Idioma</span>
+              <strong>{{ course.get_language_display|default:course.language }}</strong>
+            </div>
+            <div class="stat-item">
+              <span>Estado</span>
+              <strong>{{ course.get_status_display }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lessons Section -->
+    <section class="section">
+      <h2>📖 Contenido del curso</h2>
+      
+      {% if lessons %}
+        <ul class="lesson-list">
+          {% for lesson in lessons %}
+            <li class="lesson-item">
+              <div class="lesson-number">{{ lesson.position }}</div>
+              <div class="lesson-info">
+                <div class="lesson-title">{{ lesson.title }}</div>
+                <div class="lesson-meta">
+                  <span>{{ lesson.get_content_type_display }}</span>
+                  {% if lesson.free_preview %}
+                    <span class="badge free">Vista previa gratis</span>
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="empty-state">
+          <p>Este curso aún no tiene lecciones disponibles.</p>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Comments Section -->
+    <section class="section">
+      <h2>💬 Comentarios y valoraciones</h2>
+      
+      {% if comments %}
+        {% for comment in comments %}
+          <div class="comment">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.user.full_name }}</span>
+              <div>
+                {% if comment.rating %}
+                  <span class="rating">
+                    {% for i in "12345" %}
+                      {% if forloop.counter <= comment.rating %}⭐{% endif %}
+                    {% endfor %}
+                  </span>
+                {% endif %}
+                <span class="comment-date">{{ comment.created_at|date:"d M Y" }}</span>
+              </div>
+            </div>
+            <div class="comment-body">{{ comment.body }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <p>Aún no hay comentarios. ¡Sé el primero en valorar este curso!</p>
+        </div>
+      {% endif %}
+    </section>
+  </div>
+</body>
+</html>
