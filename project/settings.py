@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -198,3 +199,36 @@ SWAGGER_SETTINGS = {
 
 # drf-yasg settings
 SWAGGER_SCHEMA_URL = 'http://localhost:8500'
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_BACKEND
+
+SITE_ID = 1
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+# AUTHENTICATION BACKENDS - CRÍTICO PARA ALLAUTH
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Login tradicional
+    'allauth.account.auth_backends.AuthenticationBackend',  # Login social
+]
+
+# Configuración de allauth
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # o 'mandatory' si quieres verificar emails
