@@ -204,9 +204,9 @@ EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.Email
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'luispelayo712@gmail.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'xonv cosn hubm ukgk')
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER', 'luispelayo712@gmail.com')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'example@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'xxxx xxxx xxxx xxxx')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER', 'example@gmail.com')
 
 print("✅ Configuración de correo electrónico cargada., EMAIL_HOST_USER:", EMAIL_HOST_USER, "EMAIL_BACKEND:", EMAIL_BACKEND, "EMAIL_HOST:", EMAIL_HOST, "EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
 

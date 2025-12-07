@@ -22,6 +22,7 @@ def activate_account(request, user_id):
     user = get_object_or_404(AuthUser, pk=user_id)
     user.is_active = True
     user.save()
+    messages.success(request, 'Cuenta verificada exitosamente. Ya puedes iniciar sesión.')
     return redirect('login')
 
 def index(request):
