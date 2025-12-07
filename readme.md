@@ -34,6 +34,15 @@ localhost:8500/swagger
 
 ![alt text](image-2.png)
 
+# Envio de correos
+
+Agregar un archivo .env en la raiz del proyecto con las siguientes variables:
+
+- EMAIL_HOST_USER=example@gmail.com
+- EMAIL_HOST_PASSWORD=xxxx xxxx xxxx xxxx
+- EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend 
+- EMAIL_HOST=smtp.gmail.com 
+
 
 
 
