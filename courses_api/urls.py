@@ -25,4 +25,7 @@ urlpatterns = [
     path('cursos/', views.courses_catalog, name='courses_catalog'),
     path('cursos/<slug:slug>/', views.course_detail, name='course_detail'),
     path('cursos/<slug:slug>/inscribir/', views.enroll_course, name='enroll_course'),
+
+    # Activación de cuenta
+    path('activate/<int:user_id>/', views.activate_account, name='activate'),
 ]

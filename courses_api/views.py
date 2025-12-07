@@ -17,6 +17,11 @@ from .serializers import (
     EnrollmentSerializer, CommentSerializer
 )
 
+def activate_account(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.is_active = True
+    user.save()
+    return redirect('login')
 
 def index(request):
     """Vista principal - listado de cursos inscritos"""
@@ -161,8 +166,9 @@ def registro(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
+            user.is_active = False
             user.save()
-            messages.success(request, 'Usuario registrado correctamente')
+            messages.success(request, 'Correo de verificación enviado, por favor, revisa tu email.')
             return redirect('login')
     else:
         form = RegistroForm()

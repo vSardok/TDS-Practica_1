@@ -200,13 +200,15 @@ SWAGGER_SETTINGS = {
 # drf-yasg settings
 SWAGGER_SCHEMA_URL = 'http://localhost:8500'
 
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
-EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_BACKEND
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'luispelayo712@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'xonv cosn hubm ukgk')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER', 'luispelayo712@gmail.com')
+
+print("✅ Configuración de correo electrónico cargada., EMAIL_HOST_USER:", EMAIL_HOST_USER, "EMAIL_BACKEND:", EMAIL_BACKEND, "EMAIL_HOST:", EMAIL_HOST, "EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
 
 SITE_ID = 1
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
