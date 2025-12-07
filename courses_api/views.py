@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from django.contrib.auth.models import User as AuthUser
 
 from .forms import RegistroForm
 from .models import User, Course, Lesson, Enrollment, Comment
@@ -18,7 +19,7 @@ from .serializers import (
 )
 
 def activate_account(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+    user = get_object_or_404(AuthUser, pk=user_id)
     user.is_active = True
     user.save()
     return redirect('login')
